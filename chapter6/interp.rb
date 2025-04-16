@@ -53,4 +53,4 @@ str = minruby_load()
 tree = minruby_parse(str)
 p(tree)
 env = {}
-answer = evaluate(tree, env)
+evaluate(tree, env)
