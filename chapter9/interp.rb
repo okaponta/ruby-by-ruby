@@ -39,6 +39,16 @@ def evaluate(tree, genv, lenv)
     idx = evaluate(tree[2], genv, lenv)
     val = evaluate(tree[3], genv, lenv)
     ary[idx] = val
+  when "hash_new"
+    hsh = {}
+    i = 0
+    while tree[i + 1]
+      key = evaluate(tree[i + 1], genv, lenv)
+      val = evaluate(tree[i + 2], genv, lenv)
+      hsh[key] = val
+      i = i + 2
+    end
+    hsh
   when "func_call"
     args = []
     i = 0
@@ -66,7 +76,7 @@ def evaluate(tree, genv, lenv)
     last = nil
     while tree[i]
       last = evaluate(tree[i], genv, lenv)
-      i += 1
+      i = i + 1
     end
     last
   when "var_assign"
@@ -89,6 +99,13 @@ end
 str = minruby_load()
 tree = minruby_parse(str)
 p(tree)
-genv = { "p" => ["builtin", "p"], "add" => ["builtin", "add"] }
+genv = { 
+  "p" => ["builtin", "p"], 
+  "add" => ["builtin", "add"], 
+  "require" => ["builtin", "require"],
+  "minruby_parse" => ["builtin", "minruby_parse"],
+  "minruby_load" => ["builtin", "minruby_load"],
+  "minruby_call" => ["builtin", "minruby_call"]
+}
 lenv = {}
 evaluate(tree, genv, lenv)
